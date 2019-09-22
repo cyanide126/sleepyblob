@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Special+Elite" rel="stylesheet">
+  <link rel="icon" href="Blobs/blobIcon.ico">
+</head>
+<body onload="openPage()">
+  <h1 style = "text-align: center; font-family: 'Special Elite', cursive; font-size: 50px;">SLEEPY BLOB</h1>
+  <h1 id="totalDisplayHeader" style="text-align: center; font-family: 'Special Elite', cursive; font-size: 25px;"></h1>
+  <p style = "text-align: center; font-family: 'Special Elite', cursive;" > Pin this tab to your browser in order to track the time you spend offline. For every 100 minutes offline you will get 1 blob. Happy Blobbing!!! </p>
+  <h1>
+    <button style="display:block; width:120px; margin-left: auto;margin-right: auto; cursor:pointer; color: #0099CC; background: transparent; border: 2px solid #0099CC; border-radius: 6px; text-align: center; font-family: 'Special Elite', cursive; font-size: 16px; color: black;" id="stop">RESET TIME</button>
+  </h1>
+
+  <div id="blobID" style="float:left;">
+            <div>
+                <img src="Blobs/Blob1.png" width="300px" height="150px" hidden/>
+                <img src="Blobs/Blob2.png" width="300px" height="150px" hidden/>
+                <img src="Blobs/Blob3.png" width="300px" height="150px" hidden/>
+                <img src="Blobs/Blob4.png" width="300px" height="150px" hidden/>
+                <img src="Blobs/Blob5.png" width="300px" height="150px" hidden/>
+                <img src="Blobs/Blob6.png" width="300px" height="150px" hidden/>
+                <img src="Blobs/Blob5.png" width="300px" height="150px" hidden/>
+                <img src="Blobs/Blob4.png" width="300px" height="150px" hidden/>
+                <img src="Blobs/Blob3.png" width="300px" height="150px" hidden/>
+                <img src="Blobs/Blob2.png" width="300px" height="150px" hidden/>
+            </div>
+
+  </div>
+  
+<script src = "BlobFrame.js"></script>
+<script>
+  var totalDisplay = document.querySelector("#totalDisplayHeader");
+  var start;
+  var total;
+  var mins=0;
+
+  var blobMile = 100;
+
+  function openPage() {
+    //Get current Total time off screen when page loads
+    total = parseInt(localStorage.getItem("totalKey"));
+    console.log(total);
+    if (isNaN(total)) {
+      localStorage.setItem("totalKey", 0);
+      total = parseInt(localStorage.getItem("totalKey"));
+    }
+
+     //get the time that the page was last closed
+    start = parseInt(localStorage.getItem("startKey"));
+    if (start == null) {
+      localStorage.setItem("startKey",Date.now());
+    }
+
+    //calculate the different in time between last closed and now
+    var elapsedTime = Date.now()-start;
+    localStorage.setItem("totalKey", elapsedTime+total);
+
+    //display the time off screen
+    mins = ((elapsedTime+total)/(1000*60)).toFixed(0);
+    totalDisplay.textContent = "Total time spent offline: " + mins +" mins";
+    console.log(mins);
+    
+    //log the time offscreen for between current session
+    console.log(elapsedTime+'end');
+
+    var myDiv = document.getElementById("blobID");
+
+    var i=1;
+    while (i<(Math.floor(parseInt(mins)/blobMile)+1)){
+
+      console.log(i);
+      if (i>1){
+        document.body.appendChild(myDiv.cloneNode(true));
+      }
+
+      createNewBlob(i);
+
+      i+=1
+
+    }
+      
+    
+    
+
+  }
+  
+  // HANDLE BUTTON CLICK
+    document.getElementById("stop").onclick = function() {resetAll()};
+
+    function resetAll() {
+      localStorage.setItem("totalKey", 0);
+      total = parseInt(localStorage.getItem("totalKey"));
+      localStorage.setItem("startKey",Date.now());
+
+      location.reload();
+    }
+
+  window.addEventListener('unload', function(event) {
+    
+    //get the time when the user close the screen
+    localStorage.setItem("startKey",Date.now());
+     
+    //log the time when the user close the screen
+     console.log(Date.now()+'start');
+  });
+
+
+//localStorage.setItem("totalKey", 0);
+</script>
+
+
+</body>
+</html>
